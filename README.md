@@ -36,7 +36,7 @@ The return will be something like this.
 <token>
   <id>YOUR TOKEN WILL BE HERE</id>
   <username>YOUR URS USERID</username>
-  <client_id>S6 TEST</client_id>
+  <client_id>S6 DATA ACCESS</client_id>
   <user_ip_address>YOUR IP ADDRESS</user_ip_address>
 </token>
 ```
