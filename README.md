@@ -16,8 +16,8 @@ https://urs.earthdata.nasa.gov/
 Contents of the file is as follows
 ```
 <token>
-  <username>YOUR URS UAT USERID </username>
-  <password> YOUR URS UAT PASSWORD </password>
+  <username>YOUR URS USERID </username>
+  <password> YOUR URS PASSWORD </password>
   <client_id>S6_test</client_id>
   <user_ip_address>YOUR IP ADDRESS</user_ip_address>
 </token>
@@ -26,7 +26,7 @@ Save this file as mytokengenerator.xml
 
 ## Step 3: Get Token  
 ```
-curl -X POST --header "Content-Type: application/xml" -d @mytokengenerator.xml https://cmr.uat.earthdata.nasa.gov/legacy-services/rest/tokens
+curl -X POST --header "Content-Type: application/xml" -d @mytokengenerator.xml https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens
 ```
 
 ## Step 4:  Save the token information from the return
@@ -35,7 +35,7 @@ The return will be something like this.
 <?xml version="1.0" encoding="UTF-8"?>
 <token>
   <id>YOUR TOKEN WILL BE HERE</id>
-  <username>YOUR URS UAT USERID</username>
+  <username>YOUR URS USERID</username>
   <client_id>S6 TEST</client_id>
   <user_ip_address>YOUR IP ADDRESS</user_ip_address>
 </token>
