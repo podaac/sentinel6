@@ -1,51 +1,79 @@
-function [finfo outstrct]=read_nc_file_struct(fnam)
-%FILENAME:  read_nc_file_struct
-%
-%DESCRIPTION:
-%This file contains one Matlab program that is a high level NetCDF reader.  It will read any NetCDF file
-%inputted.  If the file is properly formatted, CF or another standard format, it will apply offsets and scaling
-%automatically and will replace the fill values with NaNs.  Otherwise you will need to do this manually.  
-%This program will output all of the variables in the file into a
-%structure.
-%
-%USAGE:  To run this program, use the following command:
-%   >> [finfo outstrct] = read_nc_file('filename');
-%
-%INPUTS:
-%fnam = The filename of the file you would like to read, with the full path,
-%as a string
-%
-%OUTPUTS:
-%1. finfo = File information, as a structure, with the Global and Variable Attributes
-%
-%2. outstrct is a structure containing all of the variables within the
-%   specified file.  The first field in the structure is the filename
-%
-%3. This function will output Variable and Global Attributes to the screen.  If you do
-%   not want this feature comment line 38.
-%
-%NOTES:
-%This code was written with Matlab Version 7.13.0.564 (R2011b)
-%
-%19 April 2012
-%======================================================================
-% Copyright (c) 2012, California Institute of Technology
-%======================================================================
+# Scripted Access to PODAAC Sentinel 6 datasets
+
+![N|Solid](https://podaac.jpl.nasa.gov/sites/default/files/image/custom_thumbs/podaac_logo.png)
+
+The example script is provided for one dataset. 
+  - These scripts can be set up as a cron that runs every hour or set up to download data per user needs
+  - PO.DAAC is providing this script as “starter” script for download -- advanced features can be added and it would be great if you can contribute these code back to PO.DAAC.
+  - The search and download relies on an API as defined at https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html
+
+## Step 1:  Get Earthdata Login     
+
+https://urs.earthdata.nasa.gov/ 
+> The Earthdata Login provides a single mechanism for user registration and profile  management for all EOSDIS system components (DAACs, Tools, Services). Your Earthdata login   also helps the EOSDIS program better understand the usage of EOSDIS services to improve  user experience through customization of tools and improvement of services. EOSDIS data are  openly available to all and free of charge except where governed by international  agreements.
+
+## Step 2: Create a Manifest file
+Contents of the file is as follows
+```
+<token>
+  <username>YOUR URS UAT USERID </username>
+  <password> YOUR URS UAT PASSWORD </password>
+  <client_id>S6_test</client_id>
+  <user_ip_address>YOUR IP ADDRESS</user_ip_address>
+</token>
+ ```
+Save this file as mytokengenerator.xml
+
+## Step 3: Get Token  
+```
+curl -X POST --header "Content-Type: application/xml" -d @mytokengenerator.xml https://cmr.uat.earthdata.nasa.gov/legacy-services/rest/tokens
+```
+
+## Step 4:  Save the token information from the return
+The return will be something like this.
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<token>
+  <id>YOUR TOKEN WILL BE HERE</id>
+  <username>YOUR URS UAT USERID</username>
+  <client_id>S6 TEST</client_id>
+  <user_ip_address>YOUR IP ADDRESS</user_ip_address>
+</token>
+```
+
+## Step 5:  Update Script 
+ Update script to identify the shortname for which the data needs to be downloaded. Also, provide a storage location. Provide absolute paths and not relative paths to the storage location. 
+ 
+Example below 
+```
+Short_Name="JASON_CS_S6A_L1B_GNSS_POD_DAILY"
+data = "/tmp" 
+bounding_extent="-180,-90,180,90" 
+```
+## Note 1: Downloading All or specific files for a collection 
+The code is meant to be generic – for some data products, there is more than one file that can be a data files.
+To get just the raw data file as defined by the metadata swap out
+```
+downloads_metadata = [[u['URL'] for u in r['umm']['RelatedUrls'] if u['Type']=="EXTENDED METADATA"] for r in results['items']] 
+```
+to 
+```
+downloads_metadata = []
+```
+## Note 2: Download files with specific extensions 
+```
+downloads = [item for sublist in downloads_all for item in sublist]
+filter_files = ['.nc', '.dat','.bin']  # This will only download netcdf, data, and binary files, you can add/remove other data types as you see fit
+import re
+def Filter(list1, list2):
+    return [n for n in list1 if
+             any(m in n for m in list2)]
+downloads=Filter(downloads,filter_files)
+```
+### In need of Help?
+The PO.DAAC User Services Office is the primary point of contact for answering your questions concerning data and information held by the PO.DAAC. User Services staff members are knowledgeable about both the data ordering system and the data products themselves. We answer questions about data, route requests to other DAACs, and direct questions we cannot answer to the appropriate information source. 
+
+Please contact us via email at podaac@podaac.jpl.nasa.gov 
 
 
-ncdisp(fnam)        %outputs Variable and Global Attributes to the screen
 
-finfo=ncinfo(fnam); %gets Variable and Global Attribute information from the file
-
-minargs=1;      %make sure that the right number of fields are inputted and outputted
-maxargs=2;
-outstrct=struct('filename',fnam);      %first field in the structure is the filename
-nargoutchk(minargs,maxargs)     %check if more than just finfo is declared but make sure that the number of variables declared is not more than what is in the file
-
-for i=1:length(finfo.Variables)         %loop over the number of variables in the file
-    eval(['a=ncread(fnam,''' finfo.Variables(i).Name ''');'])    %reads in variable data
-    outstrct=setfield(outstrct,finfo.Variables(i).Name,a);
-    clear a
-end
-
-end     %ends function
