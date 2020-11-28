@@ -194,7 +194,7 @@ print(url)
 with urlopen(url) as f:
     results = loads(f.read().decode())
 
-print(str(results['hits'])+" new granules ingested for "+ccid+" since "+timestamp)
+print(str(results['hits'])+" new granules ingested for "+Short_Name+" since "+timestamp)
 
 timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
