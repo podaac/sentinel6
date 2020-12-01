@@ -211,7 +211,7 @@ if len(results['items'])>0:
 
 
 downloads_all=[]
-downloads_data = [[u['URL'] for u in r['umm']['RelatedUrls'] if u['Type']=="GET DATA"] for r in results['items']]
+downloads_data = [[u['URL'] for u in r['umm']['RelatedUrls'] if u['Type']=="GET DATA" and ('Subtype' not in u or u['Subtype'] != "OPENDAP DATA")] for r in results['items']]
 downloads_metadata = [[u['URL'] for u in r['umm']['RelatedUrls'] if u['Type']=="EXTENDED METADATA"] for r in results['items']]
 
 for f in downloads_data: downloads_all.append(f)
@@ -221,6 +221,7 @@ downloads = [item for sublist in downloads_all for item in sublist]
 
 # Finish by downloading the files to the data directory in a loop. Overwrite `.update` with a new timestamp on success.
 
+success_cnt=failure_cnt=0
 
 for f in downloads:
     try:
@@ -228,20 +229,22 @@ for f in downloads:
     except Exception as e:
         print(datetime.now())
         print("FAILURE: "+f+"\n\n")
-        raise e
+        failure_cnt=failure_cnt+1
+        print(e)
     else:
         print(datetime.now())
         print("SUCCESS: "+f+"\n\n")
-
+        success_cnt=success_cnt+1
 
 # If there were updates to the local time series during this run and no exceptions were raised during the download loop, then overwrite the timestamp file that tracks updates to the data folder (`resources/nrt/.update`):
 
-
 if len(results['items'])>0:
-    with open(data+"/.update", "w") as f:
-        f.write(timestamp)
+	if not failure_cnt>0:
+   	 	with open(data+"/.update", "w") as f:
+        		f.write(timestamp)
 
-
+print("Downloaded: "+str(success_cnt)+" files\n")
+print("Files Failed to download:"+str(failure_cnt)+"\n")
 
 print("END \n\n")
 
