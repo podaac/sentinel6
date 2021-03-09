@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# # Access Sentinel-6 Data using a script
+# # Access Sentinel-6 MF Data using a script
 # This script shows a simple way to maintain a local time series of Sentinel-6  data using the [CMR Search API](https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html). It downloads granules the ingested since the previous run to a designated data folder and overwrites a hidden file inside with the timestamp of the CMR Search request on success.
 # Before you beginning this tutorial, make sure you have an Earthdata account: [https://urs.earthdata.nasa.gov] .
 # Accounts are free to create and take just a moment to set up.
@@ -10,8 +10,15 @@ from urllib import request
 from http.cookiejar import CookieJar
 import getpass
 import netrc
-print("Running Sentinel-6 Data Download")
+import requests
+import json
+import socket 
+###############The lines below are to get the IP address. You can make this static and assign a fixed value to the IPAddr variable
+hostname = socket.gethostname()    
+IPAddr = socket.gethostbyname(hostname)
+######################################
 
+print("Running Sentinel-6 MF Data Download")
 
 # ## Before you start
 # 
@@ -69,6 +76,41 @@ def setup_earthdata_login_auth(endpoint):
     opener = request.build_opener(auth, processor)
     request.install_opener(opener)
 
+###############################################################################
+# GET TOKEN FROM CMR 
+###############################################################################
+def get_token( url: str,client_id: str, user_ip: str,endpoint: str) -> str:
+    try:
+        token: str = ''
+        username, _, password = netrc.netrc().authenticators(endpoint)
+        xml: str = """<?xml version='1.0' encoding='utf-8'?>
+        <token><username>{}</username><password>{}</password><client_id>{}</client_id>
+        <user_ip_address>{}</user_ip_address></token>""".format(username, password, client_id, user_ip)
+        headers: Dict = {'Content-Type': 'application/xml','Accept': 'application/json'}
+        resp = requests.post(url, headers=headers, data=xml)
+        response_content: Dict = json.loads(resp.content)
+        token = response_content['token']['id']
+    except:
+        print("Error getting the token - check user name and password")
+    return token
+###############################################################################
+# DELETE TOKEN FROM CMR 
+###############################################################################
+def delete_token(url: str, token: str) -> None:
+	try:
+		headers: Dict = {'Content-Type': 'application/xml','Accept': 'application/json'}
+		url = '{}/{}'.format(url, token)
+		resp = requests.request('DELETE', url, headers=headers)
+		if resp.status_code == 204:
+			print("CMR token successfully deleted")
+		else:
+			print("CMR token deleting failed.")
+	except:
+		print("Error deleting the token")
+	exit(0)
+###############################################################################
+# FUNCTIONProvided CCID not available in internal dictionary: gets6data
+###############################################################################
 
 # ## Hands-off workflow
 # 
@@ -89,19 +131,26 @@ def setup_earthdata_login_auth(endpoint):
 #  for cmr, ccid, data to be unchanged. The mins value has no 
 #  impact on subsequent runs.
 #
-setup_earthdata_login_auth('urs.earthdata.nasa.gov')
 
-mins = 60 # In this case download files ingested in the last 60 minutes -- change this to whatever setting is needed
+edl="urs.earthdata.nasa.gov"
+cmr="cmr.earthdata.nasa.gov" 
+
+setup_earthdata_login_auth(edl)
+token_url="https://"+cmr+"/legacy-services/rest/tokens"
+token=get_token(token_url,'Sentinel-6', IPAddr,edl)
+mins = 120 # In this case download files ingested in the last 120 minutes -- change this to whatever setting is needed
 data_since=False
 #data_since="2020-10-14T00:00:00Z" 
 #Uncomment the above line if you want data for the last X minutes as defined above.
 # Format for the above has to be as follows "%Y-%m-%dT%H:%M:%SZ"
 
-cmr = "cmr.earthdata.nasa.gov" 
  
 Short_Name="SHORTNAME OF THE PRODUCT TO DOWNLOAD"
 #This is the Short Name of the product you want to download 
 # See Finding_shortname.pdf file
+
+### Download Files only with the following extensions
+extensions = ['.nc','.bin']
 
 data = "DOWNLOAD LOCATION" 
 #You should change `data` to a suitable download path on your file system. 
@@ -110,8 +159,7 @@ data = "DOWNLOAD LOCATION"
 bounding_extent="-180,-90,180,90"     
 #Change this to whatever extent you need. Format is W Longitude,S Latitude,E Longitude,N Latitude
 
-token="INSET TOKEN HERE"
-# See Get_API_Token.pdf file
+
 
 from os import makedirs
 import datetime
@@ -225,17 +273,17 @@ success_cnt=failure_cnt=0
 
 for f in downloads:
     try:
-        urlretrieve(f, data+"/"+basename(f))
+        for extension in extensions:
+            if f.lower().endswith((extension)):
+                urlretrieve(f, data+"/"+basename(f))
+                print(datetime.now())
+                print("SUCCESS: "+f+"\n\n")
+                success_cnt=success_cnt+1
     except Exception as e:
         print(datetime.now())
         print("FAILURE: "+f+"\n\n")
         failure_cnt=failure_cnt+1
         print(e)
-    else:
-        print(datetime.now())
-        print("SUCCESS: "+f+"\n\n")
-        success_cnt=success_cnt+1
-
 # If there were updates to the local time series during this run and no exceptions were raised during the download loop, then overwrite the timestamp file that tracks updates to the data folder (`resources/nrt/.update`):
 
 if len(results['items'])>0:
@@ -245,7 +293,7 @@ if len(results['items'])>0:
 
 print("Downloaded: "+str(success_cnt)+" files\n")
 print("Files Failed to download:"+str(failure_cnt)+"\n")
-
+delete_token(token_url,token) 
 print("END \n\n")
 
 
