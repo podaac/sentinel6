@@ -1,4 +1,4 @@
-# Scripted Access to PODAAC Sentinel 6 datasets
+# Scripted Access to PODAAC Sentinel 6-MF datasets
 
 ![N|Solid](https://podaac.jpl.nasa.gov/sites/default/files/image/custom_thumbs/podaac_logo.png)
 
@@ -8,12 +8,12 @@ The example script is provided for one dataset.
   - The search and download relies on an API as defined at https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html
 
 ## Step 1:  Get Earthdata Login     
-
+This step is needed only if you dont have an Earthdata login already.
 https://urs.earthdata.nasa.gov/ 
 > The Earthdata Login provides a single mechanism for user registration and profile  management for all EOSDIS system components (DAACs, Tools, Services). Your Earthdata login   also helps the EOSDIS program better understand the usage of EOSDIS services to improve  user experience through customization of tools and improvement of services. EOSDIS data are  openly available to all and free of charge except where governed by international  agreements.
 
 
-## Step 5:  Update Script 
+## Step 2:  Update Script 
 Update script to identify the shortname, file extenstions and spatial region for which the data needs to be downloaded. Also, provide a storage location. Provide absolute paths and not relative paths to the storage location. 
  
 Example below 
