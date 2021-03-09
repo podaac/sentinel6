@@ -45,8 +45,16 @@ downloads=Filter(downloads,filter_files)
 ```
 
 ## Note 3: Pre-generate Tokens
-The example code manages CMR tokens internally for access to data. The tokens can be pre-generated using the information provided in [a relative link](Get_API_Token.pdf)
+The example code manages CMR tokens internally for access to data. The tokens can be pre-generated using the information provided in [a Token Generation](Get_API_Token.pdf)
 
+
+## Note 4: Create static IP address 
+IP Address information is needed for CMR token generation. If the system running the code has a static IP address (or IP address that doesnt change too often), then you can hard-code the IP address in the IPAddr variable. This can speed up the script and optimize performance. 
+
+```
+hostname = socket.gethostname()    
+IPAddr = socket.gethostbyname(hostname)
+```
 
 ### In need of Help?
 The PO.DAAC User Services Office is the primary point of contact for answering your questions concerning data and information held by the PO.DAAC. User Services staff members are knowledgeable about both the data ordering system and the data products themselves. We answer questions about data, route requests to other DAACs, and direct questions we cannot answer to the appropriate information source. 
