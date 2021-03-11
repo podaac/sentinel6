@@ -25,8 +25,10 @@ extensions = ['.nc','.bin']
 ```
 
 ## Note 1: netrc file 
-The netrc used within the script  will allow Python scripts to log into any Earthdata Login application programmatically.  To avoid being prompted for
+The netrc used within the script  will allow Python scripts to log into any Earthdata Login without being prompted for
 credentials every time you run. The netrc file should be placed in your HOME directory.
+To find the location of your HOME directory 
+
 On UNIX you can use 
 ```
 echo $HOME 
