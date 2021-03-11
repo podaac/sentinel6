@@ -23,7 +23,26 @@ data = "/tmp"
 bounding_extent="-180,-90,180,90" 
 extensions = ['.nc','.bin']
 ```
-## Note 1: Downloading All or specific files for a collection 
+
+## Note 1: netrc file 
+The netrc used within the script  will allow Python scripts to log into any Earthdata Login application programmatically.  To avoid being prompted for
+credentials every time you run. The netrc file should be placed in your HOME directory.
+On UNIX you can use 
+```
+echo $HOME 
+```
+On Windows you can use 
+```
+echo %HOMEDRIVE%%HOMEPATH%
+```
+
+The output location from the command above should be the location of the `.netrc` (`_netrc` on Windows) file. 
+
+**If the script cannot find the netrc file, you will be prompted to enter the username and passowrd and the script wont be able to generate the CMR token**
+
+
+
+## Note 2: Downloading All or specific files for a collection 
 The code is meant to be generic – for some data products, there is more than one file that can be a data files.
 To get just the raw data file as defined by the metadata swap out
 ```
@@ -33,7 +52,7 @@ to
 ```
 downloads_metadata = []
 ```
-## Note 2: Download files with specific extensions 
+## Note 3: Download files with specific extensions 
 ```
 downloads = [item for sublist in downloads_all for item in sublist]
 filter_files = ['.nc', '.dat','.bin']  # This will only download netcdf, data, and binary files, you can add/remove other data types as you see fit
@@ -44,11 +63,11 @@ def Filter(list1, list2):
 downloads=Filter(downloads,filter_files)
 ```
 
-## Note 3: Pre-generate Tokens
+## Note 4: Pre-generate Tokens
 The example code manages CMR tokens internally for access to data. The tokens can be pre-generated using the information provided in [a Token Generation](Get_API_Token.pdf)
 
 
-## Note 4: Create static IP address 
+## Note 5: Create static IP address 
 IP Address information is needed for CMR token generation. If the system running the code has a static IP address (or IP address that doesnt change too often), then you can hard-code the IP address in the IPAddr variable. This can speed up the script and optimize performance. 
 
 ```

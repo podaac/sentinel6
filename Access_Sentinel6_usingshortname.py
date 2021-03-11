@@ -22,14 +22,13 @@ print("Running Sentinel-6 MF Data Download")
 
 # ## Before you start
 # 
-# Before you beginning this tutorial, make sure you have an Earthdata account: [https://urs.earthdata.nasa.gov](https://urs.earthdata.nasa.gov) for the operations envionrment (most common) or [https://uat.urs.earthdata.nasa.gov](https://uat.urs.earthdata.nasa.gov) for the UAT environment.
+# Before you beginning this tutorial, make sure you have an Earthdata account: [https://urs.earthdata.nasa.gov].
 # 
 # Accounts are free to create and take just a moment to set up.
 # 
 # ## Authentication setup
 # 
-# We need some boilerplate up front to log in to Earthdata Login.  The function below will allow Python
-# scripts to log into any Earthdata Login application programmatically.  To avoid being prompted for
+# The function below will allow Python scripts to log into any Earthdata Login application programmatically.  To avoid being prompted for
 # credentials every time you run and also allow clients such as curl to log in, you can add the following
 # to a `.netrc` (`_netrc` on Windows) file in your home directory:
 # 
@@ -116,13 +115,12 @@ def delete_token(url: str, token: str) -> None:
 # 
 # This workflow/notebook can be run routinely to maintain a time series of  data, downloading new granules as they become available at PO.DAAC. 
 # 
-# The notebook writes/overwrites a file `.update` to the target data directory with each successful run. The file tracks to date and time of the most recent update to the time series of  granules using a timestamp in the format `yyyy-mm-ddThh:mm:ssZ`. 
+# The script creates a file `.update` to the target data directory with each successful run. The file tracks to date and time of the most recent update to the time series of  granules using a timestamp in the format `yyyy-mm-ddThh:mm:ssZ`. 
 # 
 # The timestamp matches the value used for the [`created_at`](https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html#g-created-at) parameter in the last successful run. This parameter finds the granules created within a range of datetimes. This workflow leverages the `created_at` parameter to search backwards in time for new granules ingested between the time of our timestamp and now.
 # 
 # * `mins`: Initialize a new local time series by starting with the granules ingested since ___ minutes ago. 
-# * `cmr`: The domain of the target CMR metadata  instance is `cmr.earthdata.nasa.gov` 
-# * `shortname`: The unique Shortname  of the desired collection.
+# * `shortname`: The unique Shortname  of the desired dataset.
 # * `data`: The path to a local directory in which to download/maintain a copy of the NRT granule time series.
 
 
@@ -138,9 +136,9 @@ cmr="cmr.earthdata.nasa.gov"
 setup_earthdata_login_auth(edl)
 token_url="https://"+cmr+"/legacy-services/rest/tokens"
 token=get_token(token_url,'Sentinel-6', IPAddr,edl)
-mins = 120 # In this case download files ingested in the last 120 minutes -- change this to whatever setting is needed
+mins = 60 # In this case download files ingested in the last 60 minutes -- change this to whatever setting is needed
 data_since=False
-#data_since="2020-10-14T00:00:00Z" 
+#data_since="2021-01-14T00:00:00Z" 
 #Uncomment the above line if you want data for the last X minutes as defined above.
 # Format for the above has to be as follows "%Y-%m-%dT%H:%M:%SZ"
 
@@ -170,7 +168,7 @@ from datetime import datetime, timedelta
 from json import dumps, loads
 
 
-# **The search retrieves granules ingested during the last `n` minutes.** A file in your local data dir  file that tracks updates to your data directory, if one file exists. The CMR Search falls back on the ten minute window if not.
+# **The search retrieves granules ingested during the last `n` minutes.** A file in your local data dir  file that tracks updates to your data directory, if one file exists.
 
 
 timestamp = (datetime.utcnow()-timedelta(minutes=mins)).strftime("%Y-%m-%dT%H:%M:%SZ")
