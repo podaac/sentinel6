@@ -44,7 +44,7 @@ The output location from the command above should be the location of the `.netrc
 
 
 
-## Note 2: Downloading All or specific files for a collection 
+## Note 2: Downloading all or specific files for a collection 
 The code is meant to be generic – for some data products, there is more than one file that can be a data files.
 To get just the raw data file as defined by the metadata swap out
 ```
@@ -65,7 +65,7 @@ def Filter(list1, list2):
 downloads=Filter(downloads,filter_files)
 ```
 
-## Note 4: Pre-generate Tokens
+## Note 4: Pre-generate tokens
 The example code manages CMR tokens internally for access to data. The tokens can be pre-generated using the information provided in [a Token Generation](Get_API_Token.pdf)
 
 
