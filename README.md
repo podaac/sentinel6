@@ -17,7 +17,7 @@ https://urs.earthdata.nasa.gov/
 ## Step 2:  Update Script  -- Get data by time and spatial bounds
 This is applicable for file **Access_Sentinel6MF_usingshortname.py**
 
->Update script to identify the shortname, file extenstions and spatial region for which the data needs to be downloaded. Also, provide a storage location. Provide absolute paths and not relative paths to the storage location. 
+Update script to identify the shortname, file extenstions and spatial region for which the data needs to be downloaded. Also, provide a storage location. Provide absolute paths and not relative paths to the storage location. 
  
 Example below 
 ```
@@ -29,7 +29,7 @@ extensions = ['.nc','.bin']
 ## Step 2:  Update Script  -- Get data by Pass/Cycle
 This  is applicable for file **Access_Sentinel6MF_find_file_by_cycle_pass.py**
 
->The search retrieves granules for a particular cycle and pass. Pass is an optional parameter -- If pass is not provided then all files for a particular pass will be used
+The search retrieves granules for a particular cycle and pass. Pass is an optional parameter -- If pass is not provided then all files for a particular pass will be used
 Define the cycle and pass you need in this section. 
  
 Example below 
