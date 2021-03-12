@@ -13,8 +13,11 @@ https://urs.earthdata.nasa.gov/
 > The Earthdata Login provides a single mechanism for user registration and profile  management for all EOSDIS system components (DAACs, Tools, Services). Your Earthdata login   also helps the EOSDIS program better understand the usage of EOSDIS services to improve  user experience through customization of tools and improvement of services. EOSDIS data are  openly available to all and free of charge except where governed by international  agreements.
 
 
-## Step 2:  Update Script 
-Update script to identify the shortname, file extenstions and spatial region for which the data needs to be downloaded. Also, provide a storage location. Provide absolute paths and not relative paths to the storage location. 
+
+## Step 2:  Update Script  -- Get data by time and spatial bounds
+This is applicable for file **Access_Sentinel6MF_usingshortname.py**
+
+>Update script to identify the shortname, file extenstions and spatial region for which the data needs to be downloaded. Also, provide a storage location. Provide absolute paths and not relative paths to the storage location. 
  
 Example below 
 ```
@@ -22,6 +25,17 @@ Short_Name="JASON_CS_S6A_L1B_GNSS_POD_DAILY"
 data = "/tmp" 
 bounding_extent="-180,-90,180,90" 
 extensions = ['.nc','.bin']
+
+## Step 2:  Update Script  -- Get data by Pass/Cycle
+This  is applicable for file **Access_Sentinel6MF_find_file_by_cycle_pass.py**
+
+>The search retrieves granules for a particular cycle and pass. Pass is an optional parameter -- If pass is not provided then all files for a particular pass will be used
+Define the cycle and pass you need in this section. 
+ 
+Example below 
+```
+s6mf_cycle=2
+s6mf_pass=245
 ```
 
 ## Note 1: netrc file 

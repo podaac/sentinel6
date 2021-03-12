@@ -53,7 +53,6 @@ def setup_earthdata_login_auth(endpoint):
     first and if no credentials are found, it prompts for them.
 
     Valid endpoints include:
-        uat.urs.earthdata.nasa.gov - Earthdata Login UAT (Harmony's current default)
         urs.earthdata.nasa.gov - Earthdata Login production
     """
     try:
@@ -61,10 +60,7 @@ def setup_earthdata_login_auth(endpoint):
     except (FileNotFoundError, TypeError):
         # FileNotFound = There's no .netrc file
         # TypeError = The endpoint isn't in the netrc file, causing the above to try unpacking None
-        print('Please provide your Earthdata Login credentials to allow data access')
-        print('Your credentials will only be passed to %s and will not be exposed ' % (endpoint))
-        username = input('Username:')
-        password = getpass.getpass()
+        print("There's no .netrc file or the The endpoint isn't in the netrc file")
 
     manager = request.HTTPPasswordMgrWithDefaultRealm()
     manager.add_password(None, endpoint, username, password)
@@ -108,7 +104,7 @@ def delete_token(url: str, token: str) -> None:
 		print("Error deleting the token")
 	exit(0)
 ###############################################################################
-# FUNCTIONProvided CCID not available in internal dictionary: gets6data
+# Downloading the file
 ###############################################################################
 
 # ## Hands-off workflow
@@ -135,7 +131,7 @@ cmr="cmr.earthdata.nasa.gov"
 
 setup_earthdata_login_auth(edl)
 token_url="https://"+cmr+"/legacy-services/rest/tokens"
-token=get_token(token_url,'Sentinel-6', IPAddr,edl)
+token=get_token(token_url,'Sentinel-6MF', IPAddr,edl)
 mins = 60 # In this case download files ingested in the last 60 minutes -- change this to whatever setting is needed
 data_since=False
 #data_since="2021-01-14T00:00:00Z" 
