@@ -5,6 +5,11 @@
 # Before you beginning this tutorial, make sure you have an Earthdata account: [https://urs.earthdata.nasa.gov] .
 # Accounts are free to create and take just a moment to set up.
 
+
+####
+#Users are encouraged to use data files from March 11th 2021 onwards.
+####
+
 import urllib
 from urllib import request
 from http.cookiejar import CookieJar
