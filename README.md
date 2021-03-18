@@ -1,4 +1,9 @@
+
 # Scripted Access to PODAAC Sentinel 6-MF datasets
+
+> Users are encouraged to use data files from March 11th 2021 onwards.
+
+----
 
 ![N|Solid](https://podaac.jpl.nasa.gov/sites/default/files/image/custom_thumbs/podaac_logo.png)
 
