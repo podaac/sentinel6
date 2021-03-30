@@ -140,7 +140,7 @@ token=get_token(token_url,'Sentinel-6MF', IPAddr,edl)
 mins = 60 # In this case download files ingested in the last 60 minutes -- change this to whatever setting is needed
 data_since=False
 #data_since="2021-01-14T00:00:00Z" 
-#Uncomment the above line if you want data for the last X minutes as defined above.
+#Uncomment the above line if you want data from a particular date onwards.In this example you will get data from 2021-01-14 UTC time 00:00:00 onwards. 
 # Format for the above has to be as follows "%Y-%m-%dT%H:%M:%SZ"
 
  
@@ -149,6 +149,8 @@ Short_Name="SHORTNAME OF THE PRODUCT TO DOWNLOAD"
 # See Finding_shortname.pdf file
 
 ### Download Files only with the following extensions
+
+## Sentinel-6 MF datasets also have *.bufr.bin, *.DBL, *.rnx, *.dat 
 extensions = ['.nc','.bin']
 
 data = "DOWNLOAD LOCATION" 

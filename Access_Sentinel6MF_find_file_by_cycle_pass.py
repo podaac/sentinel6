@@ -131,6 +131,7 @@ Short_Name="SHORTNAME OF THE PRODUCT TO DOWNLOAD"
 # See Finding_shortname.pdf file
 
 ### Download Files only with the following extensions
+## Sentinel-6 MF datasets also have *.bufr.bin, *.DBL, *.rnx, *.dat 
 extensions = ['.nc','.bin']
 
 data = "DOWNLOAD LOCATION" 
