@@ -46,6 +46,8 @@ request = Request(
     spatial=BBox(-10, -10, 10, 10)
 )
 
+request.is_valid()
+
 job1_id = harmony_client.submit(request)
 print(harmony_client.status(job1_id))
 print(harmony_client.result_json(job1_id, show_progress=False))
@@ -53,3 +55,28 @@ print(harmony_client.result_json(job1_id, show_progress=False))
 futures = harmony_client.download_all(job1_id)
 for f in futures:
     print(f.result())
+    
+    
+''' Other subset request examples 
+
+request = Request(
+    collection=collection,
+    spatial=BBox(-10, -10, 10, 10),
+    temporal={
+        'start': dt.datetime(2020, 12, 1),
+        'stop': dt.datetime(2020, 12, 31)
+    }
+)
+
+request = Request(
+    collection=collection,
+    spatial=BBox(-10, -10, 10, 10),
+    temporal={
+        'start': dt.datetime(2020, 12, 1),
+        'stop': dt.datetime(2020, 12, 31)
+    },
+    max_results=2
+)
+
+'''
+     
